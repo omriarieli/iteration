@@ -1,0 +1,9 @@
+vpn-job2:
+  stage: test
+  script:
+    - apt-get install -y -qq openvpn
+    - which openvpn
+    - echo &VPN_CONF > /tmp/config.ovpn
+    - openvpn --config /tmp/config.ovpn > /dev/null 2>&1 &
+    - while [ -n "$(ip addr show tun0 2>&1 > /dev/null)" ]; do sleep 0.1; done
+    - ip addr show tun0
