@@ -1,9 +1,16 @@
+default:
+  image: alpine
 vpn-job2:
   stage: test
   script:
-    - apt-get install -y -qq openvpn
-    - which openvpn
-    - echo &VPN_CONF > /tmp/config.ovpn
+    - env
+    - pwd
+    - apk update && apk add openvpn openrc curl
+    # - mkdir -p /dev/net
+    # - mknod /dev/net/tun c 10 200
+    - cat /builds/group560/demo.tmp/VPN_CONF > /tmp/config.ovpn
+    - ls -ltra /dev/net/
     - openvpn --config /tmp/config.ovpn > /dev/null 2>&1 &
     - while [ -n "$(ip addr show tun0 2>&1 > /dev/null)" ]; do sleep 0.1; done
     - ip addr show tun0
+    # - ip a
